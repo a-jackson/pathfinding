@@ -29,13 +29,14 @@ namespace PathFinding
         /// <param name="y">
         /// The y coordinate of the node.
         /// </param>
-        public Node(bool passable, int x, int y)
+        public Node(bool passable, int x, int y, int cost)
         {
             this.Parent = null;
             this.H = 0;
             this.G = 0;
             this.X = x;
             this.Y = y;
+            this.Cost = cost;
             this.NodeState = passable ? NodeState.Clear : NodeState.Blocked;
         }
 
@@ -84,6 +85,8 @@ namespace PathFinding
         /// </summary>
         public int Y { get; private set; }
 
+        public int Cost { get; private set; }
+
         #endregion
 
         #region Public Methods and Operators
@@ -96,7 +99,7 @@ namespace PathFinding
         /// </param>
         public void CalculateG(Node parent)
         {
-            int tempG = parent.G + 1;
+            int tempG = parent.G + 1 + Cost;
             if (parent.Parent != null)
             {
                 // Check if in order to get here, the path has to turn. 
@@ -129,6 +132,11 @@ namespace PathFinding
         public void EstimateH(Node endNode)
         {
             this.H = Math.Abs(this.X - endNode.X) + Math.Abs(this.Y - endNode.Y);
+        }
+
+        public void ResetG()
+        {
+            this.G = 0;
         }
 
         #endregion

@@ -74,6 +74,7 @@ namespace PathFinding
                     {
                         case NodeState.Clear:
                             e.Graphics.FillRectangle(grayBrush, r);
+                            e.Graphics.DrawString(node.Cost.ToString(), this.Font, blackBrush, r);
                             break;
                         case NodeState.Blocked:
                             e.Graphics.FillRectangle(blackBrush, r);

@@ -11,7 +11,9 @@ namespace PathFinding
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Perform A* Pathfinding.
@@ -68,13 +70,21 @@ namespace PathFinding
         /// </summary>
         public void Reset()
         {
-            this.Nodes = new Node[GridSize, GridSize];
-            var r = new Random();
-            for (int i = 0; i < GridSize; i++)
+            var mapFile =
+                new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("PathFinding.Map.txt"));
+
+            var map = mapFile.ReadToEnd();
+            var cells = map.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Split(' ')).ToArray();
+            var rows = cells.Count();
+            var columns = cells.First().Count();
+            this.Nodes = new Node[columns, rows];
+
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < GridSize; j++)
+                for (int j = 0; j < columns; j++)
                 {
-                    this.Nodes[i, j] = new Node(r.Next(100) > BlockedProbability, i, j);
+                    var cell = int.Parse(cells[i][j]);
+                    this.Nodes[j, i] = new Node(cell != 0, j, i, cell);
                 }
             }
 
@@ -110,6 +120,8 @@ namespace PathFinding
                 {
                     node.NodeState = NodeState.Clear;
                 }
+
+                node.ResetG();
             }
 
             // Start the with the start node.
