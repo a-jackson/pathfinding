@@ -99,7 +99,7 @@ namespace PathFinding
         /// </param>
         public void CalculateG(Node parent)
         {
-            int tempG = parent.G + 1 + Cost;
+            int tempG = parent.G + this.Cost;
             if (parent.Parent != null)
             {
                 // Check if in order to get here, the path has to turn. 
